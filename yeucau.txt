@@ -1,0 +1,11 @@
+Lấy Toàn Bộ Danh Sách Symbols  cho phép Futures từ Bybit 
+
+Xuất ra file txt
+theo format:
+
+BTCUSDT 
+ETHUSDT
+...
+
+** Path
+lưu trong export/Bybit/symbols_futures_bybit.txt

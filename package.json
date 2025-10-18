@@ -1,0 +1,16 @@
+{
+  "name": "get-all-symbol-trading",
+  "version": "1.0.0",
+  "description": "Fetch all Futures symbols from Bybit and export to text file",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["bybit", "futures", "symbols", "trading"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.5.0"
+  }
+}
