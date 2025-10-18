@@ -29,17 +29,18 @@ async function getBybitFuturesSymbols() {
                 // Only active trading symbols
                 if (instrument.status !== 'Trading') return false;
                 
-                // Only perpetual contracts (no expiry date)
-                // Perpetual contracts don't have contractType or have contractType as 'LinearPerpetual'
-                // Also filter out symbols with date patterns (like BTCUSDT-07NOV25)
                 const symbol = instrument.symbol;
-                const hasDatePattern = /-\d{2}[A-Z]{3}\d{2}$/.test(symbol); // Pattern like -07NOV25
                 
-                return !hasDatePattern && (
-                    !instrument.contractType || 
-                    instrument.contractType === 'LinearPerpetual' ||
-                    instrument.contractType === 'InversePerpetual'
-                );
+                // Only USDT perpetual contracts
+                // Must end with USDT (not PERP or other)
+                if (!symbol.endsWith('USDT')) return false;
+                
+                // Filter out symbols with date patterns (like BTCUSDT-07NOV25)
+                const hasDatePattern = /-\d{2}[A-Z]{3}\d{2}$/.test(symbol);
+                if (hasDatePattern) return false;
+                
+                // Only LinearPerpetual (USDT perpetual futures)
+                return instrument.contractType === 'LinearPerpetual';
             })
             .map(instrument => instrument.symbol)
             .sort(); // Sort alphabetically
@@ -73,8 +74,8 @@ function saveSymbolsToFile(symbols, filePath) {
         const dir = path.dirname(filePath);
         ensureDirectoryExists(dir);
         
-        // Format symbols as required (one symbol per line)
-        const content = symbols.join('\n');
+        // Format symbols as required (one symbol per line with BYBIT: prefix and .P suffix for TradingView)
+        const content = symbols.map(symbol => `BYBIT:${symbol}.P`).join('\n');
         
         // Write to file
         fs.writeFileSync(filePath, content, 'utf8');
